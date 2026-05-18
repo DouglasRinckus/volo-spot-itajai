@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VOLO SPOT — Oportunidade de Investimento | Itajaí SC</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
   :root {
     --gold: #C9A96E;
@@ -203,14 +204,31 @@
     cursor: grab;
   }
   .gallery-scroll::-webkit-scrollbar { display: none; }
-  .gallery-item { flex: 0 0 auto; overflow: hidden; position: relative; width: 340px; }
+  .gallery-item {
+    flex: 0 0 auto; overflow: hidden; position: relative; width: 340px;
+    cursor: pointer;
+  }
   .gallery-item img {
     width: 100%; height: 320px;
     object-fit: cover; display: block;
     transition: transform 0.6s ease, filter 0.4s;
     filter: brightness(0.82);
+    pointer-events: none;
   }
   .gallery-item:hover img { transform: scale(1.05); filter: brightness(1); }
+  .gallery-item::after {
+    content: '⤢';
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(201,169,110,0.4);
+    color: var(--gold);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .gallery-item:hover::after { opacity: 1; }
   .gallery-item .caption {
     position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(transparent, rgba(0,0,0,0.65));
@@ -219,7 +237,66 @@
     letter-spacing: 2px;
     text-transform: uppercase;
     color: rgba(255,255,255,0.65);
+    pointer-events: none;
   }
+
+  /* LIGHTBOX */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(0,0,0,0.94);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  .lightbox.open { opacity: 1; visibility: visible; }
+  .lightbox-img-wrap {
+    position: relative; width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    padding: 60px 72px 100px;
+  }
+  .lightbox-img {
+    max-width: 100%; max-height: 100%;
+    object-fit: contain;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .lightbox-caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    text-align: center;
+    padding: 20px 60px 28px;
+    font-size: 11px; letter-spacing: 2.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.7);
+    background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  }
+  .lightbox-counter {
+    position: absolute; top: 24px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px; letter-spacing: 2px;
+    color: var(--text-muted); text-transform: uppercase;
+  }
+  .lightbox-close {
+    position: absolute; top: 20px; right: 24px;
+    width: 44px; height: 44px;
+    background: transparent; border: 1px solid rgba(201,169,110,0.35);
+    color: var(--gold); font-size: 22px; line-height: 1;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    z-index: 2;
+  }
+  .lightbox-close:hover { background: rgba(201,169,110,0.12); border-color: var(--gold); }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 48px; height: 48px;
+    background: rgba(13,13,13,0.7);
+    border: 1px solid rgba(201,169,110,0.35);
+    color: var(--gold); font-size: 28px; line-height: 1;
+    cursor: pointer; transition: background 0.2s, border-color 0.2s;
+    z-index: 2;
+  }
+  .lightbox-nav:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
+  .lightbox-prev { left: 16px; }
+  .lightbox-next { right: 16px; }
+  body.lightbox-open { overflow: hidden; }
 
   /* AMENITIES */
   .amenities-grid {
@@ -256,7 +333,46 @@
     border: 1px solid rgba(201,169,110,0.15);
     overflow: hidden;
   }
-  .map-box img { width: 100%; height: auto; display: block; object-fit: cover; }
+  #map-interactive {
+    width: 100%; height: 480px;
+    background: var(--dark-4);
+    z-index: 1;
+  }
+  .map-legend {
+    display: flex; flex-wrap: wrap; gap: 10px 16px;
+    padding: 12px 14px;
+    background: var(--dark-4);
+    border-top: 1px solid rgba(201,169,110,0.1);
+  }
+  .map-legend-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 10px; color: var(--text-muted);
+    letter-spacing: 0.5px;
+  }
+  .map-legend-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .map-legend-dot.gold { background: var(--gold); box-shadow: 0 0 0 2px rgba(201,169,110,0.4); }
+  .map-legend-dot.green { background: #4a7a4a; }
+  .map-legend-dot.blue { background: #3a5a8a; }
+  .map-legend-dot.teal { background: #2a6a7a; }
+  .map-legend-dot.sand { background: #8a7a5a; }
+  .map-attribution {
+    font-size: 9px; color: #666;
+    padding: 6px 14px 10px; margin: 0;
+  }
+  .leaflet-popup-content-wrapper {
+    background: var(--dark-3);
+    color: var(--text);
+    border: 1px solid rgba(201,169,110,0.25);
+    border-radius: 2px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  }
+  .leaflet-popup-content { margin: 12px 14px; font-size: 12px; line-height: 1.5; }
+  .leaflet-popup-content strong { color: var(--gold); font-weight: 500; display: block; margin-bottom: 4px; font-size: 13px; }
+  .leaflet-popup-tip { background: var(--dark-3); }
+  .leaflet-container a.leaflet-popup-close-button { color: var(--gold); }
   .map-link-btn {
     display: block;
     background: var(--gold);
@@ -517,6 +633,12 @@
     .gallery-scroll { padding: 0 24px; }
     .gallery-item { width: 280px !important; }
     .gallery-item img { height: 240px; }
+    .lightbox-img-wrap { padding: 56px 16px 88px; }
+    .lightbox-nav { width: 40px; height: 40px; font-size: 22px; }
+    .lightbox-prev { left: 8px; }
+    .lightbox-next { right: 8px; }
+    .lightbox-caption { padding: 16px 24px 24px; }
+    #map-interactive { height: 360px; }
     .amenities-grid { grid-template-columns: 1fr 1fr; }
     .location-grid { grid-template-columns: 1fr; gap: 32px; }
     .units-header { flex-direction: column; align-items: flex-start; gap: 16px; }
@@ -672,8 +794,15 @@
   <div class="location-grid">
     <div>
       <div class="map-box">
-        <img src="assets/mapa-localizacao.jpg" alt="Mapa de localização — Centro de Itajaí, Volo Spot">
-        <p style="font-size:9px;color:#666;padding:8px 12px 0;margin:0;">© OpenStreetMap contributors</p>
+        <div id="map-interactive" aria-label="Mapa interativo da localização do Volo Spot"></div>
+        <div class="map-legend">
+          <span class="map-legend-item"><span class="map-legend-dot gold"></span> Volo Spot</span>
+          <span class="map-legend-item"><span class="map-legend-dot green"></span> Hospital</span>
+          <span class="map-legend-item"><span class="map-legend-dot blue"></span> Univali</span>
+          <span class="map-legend-item"><span class="map-legend-dot teal"></span> Porto</span>
+          <span class="map-legend-item"><span class="map-legend-dot sand"></span> Praia / Beira Rio</span>
+        </div>
+        <p class="map-attribution">Arraste e dê zoom para explorar · © OpenStreetMap contributors</p>
       </div>
       <a class="map-link-btn" href="https://www.google.com/maps/place/R.+Ver.+Jo%C3%A3o+Angelino+Lopes+J%C3%BAnior+-+Centro,+Itaja%C3%AD+-+SC,+88301-230/@-26.9098086,-48.659507,1089m/data=!3m1!1e3!4m6!3m5!1s0x94d8cc74b7d02ab7:0xd1b1e53833f07bb!8m2!3d-26.9106025!4d-48.6588212!16s%2Fg%2F1ymvfcx7x?entry=ttu" target="_blank">
         🗺&nbsp;&nbsp;Abrir no Google Maps
@@ -865,6 +994,18 @@
   <p class="disclaimer">Material elaborado para investidores. Não constitui oferta formal. Informações sujeitas a verificação junto à incorporadora. Tabela de referência: Março/2026 (pré-lançamento). Previsão de entrega: 60 meses após o registro da incorporação.</p>
 </div>
 
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galeria em tela cheia">
+  <button class="lightbox-close" id="lightbox-close" type="button" aria-label="Fechar">&times;</button>
+  <span class="lightbox-counter" id="lightbox-counter"></span>
+  <div class="lightbox-img-wrap">
+    <button class="lightbox-nav lightbox-prev" id="lightbox-prev" type="button" aria-label="Imagem anterior">&#8249;</button>
+    <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" id="lightbox-next" type="button" aria-label="Próxima imagem">&#8250;</button>
+  </div>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="logo">Volo Spot · Itajaí SC</div>
@@ -872,19 +1013,174 @@
   <p>Material exclusivo para investidores · Maio 2026</p>
 </footer>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-// Drag to scroll gallery
-const gallery = document.getElementById('gallery');
-let isDown = false, startX, scrollLeft;
-gallery.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
-gallery.addEventListener('mouseleave', () => isDown = false);
-gallery.addEventListener('mouseup', () => isDown = false);
-gallery.addEventListener('mousemove', e => {
+// ——— Galeria: arrastar horizontalmente ———
+const galleryEl = document.getElementById('gallery');
+let isDown = false, startX, scrollLeft, dragMoved = false;
+
+galleryEl.addEventListener('mousedown', e => {
+  isDown = true;
+  dragMoved = false;
+  startX = e.pageX - galleryEl.offsetLeft;
+  scrollLeft = galleryEl.scrollLeft;
+});
+galleryEl.addEventListener('mouseleave', () => { isDown = false; });
+galleryEl.addEventListener('mouseup', () => { isDown = false; });
+galleryEl.addEventListener('mousemove', e => {
   if (!isDown) return;
   e.preventDefault();
-  const x = e.pageX - gallery.offsetLeft;
-  gallery.scrollLeft = scrollLeft - (x - startX) * 1.5;
+  const x = e.pageX - galleryEl.offsetLeft;
+  if (Math.abs(x - startX) > 5) dragMoved = true;
+  galleryEl.scrollLeft = scrollLeft - (x - startX) * 1.5;
 });
+
+// ——— Lightbox ———
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxCaption = document.getElementById('lightbox-caption');
+const lightboxCounter = document.getElementById('lightbox-counter');
+const items = Array.from(galleryEl.querySelectorAll('.gallery-item'));
+const slides = items.map(item => ({
+  src: item.querySelector('img').src,
+  alt: item.querySelector('img').alt,
+  caption: item.querySelector('.caption').textContent.trim()
+}));
+let currentIndex = 0;
+let touchStartX = 0;
+
+function showSlide(index) {
+  currentIndex = (index + slides.length) % slides.length;
+  const s = slides[currentIndex];
+  lightboxImg.src = s.src;
+  lightboxImg.alt = s.alt;
+  lightboxCaption.textContent = s.caption;
+  lightboxCounter.textContent = `${currentIndex + 1} / ${slides.length}`;
+}
+
+function openLightbox(index) {
+  showSlide(index);
+  lightbox.classList.add('open');
+  document.body.classList.add('lightbox-open');
+}
+
+function closeLightbox() {
+  lightbox.classList.remove('open');
+  document.body.classList.remove('lightbox-open');
+}
+
+items.forEach((item, i) => {
+  item.addEventListener('click', () => {
+    if (dragMoved) return;
+    openLightbox(i);
+  });
+});
+
+document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+document.getElementById('lightbox-prev').addEventListener('click', e => { e.stopPropagation(); showSlide(currentIndex - 1); });
+document.getElementById('lightbox-next').addEventListener('click', e => { e.stopPropagation(); showSlide(currentIndex + 1); });
+
+lightbox.addEventListener('click', e => {
+  if (e.target === lightbox || e.target.classList.contains('lightbox-img-wrap')) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+  if (!lightbox.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') showSlide(currentIndex - 1);
+  if (e.key === 'ArrowRight') showSlide(currentIndex + 1);
+});
+
+lightbox.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+lightbox.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].screenX - touchStartX;
+  if (Math.abs(diff) < 50) return;
+  if (diff < 0) showSlide(currentIndex + 1);
+  else showSlide(currentIndex - 1);
+}, { passive: true });
+
+// ——— Mapa interativo (Leaflet) ———
+const VOLO = [-26.9106025, -48.6588212];
+const pois = [
+  {
+    id: 'volo',
+    pos: VOLO,
+    color: '#C9A96E',
+    radius: 12,
+    zIndex: 1000,
+    title: 'VOLO SPOT',
+    desc: 'Rua Ver. João Angelino Lopes Júnior — Centro<br><em>Seu investimento está aqui</em>'
+  },
+  {
+    id: 'hospital',
+    pos: [-26.91145, -48.65815],
+    color: '#4a7a4a',
+    radius: 9,
+    title: 'Complexo Hospitalar',
+    desc: 'Hospital e Maternidade São José · HEMOSC<br>Na mesma região — demanda 12 meses'
+  },
+  {
+    id: 'univali',
+    pos: [-26.9082, -48.6608],
+    color: '#3a5a8a',
+    radius: 9,
+    title: 'Univali',
+    desc: 'Universidade do Vale do Itajaí<br>~500 m · fluxo de estudantes e visitantes'
+  },
+  {
+    id: 'porto',
+    pos: [-26.8998, -48.6518],
+    color: '#2a6a7a',
+    radius: 9,
+    title: 'Porto de Itajaí',
+    desc: 'Um dos maiores portos do Brasil<br>Executivos e logística — demanda semanal'
+  },
+  {
+    id: 'praia',
+    pos: [-26.9178, -48.6592],
+    color: '#8a7a5a',
+    radius: 9,
+    title: 'Praia / Beira Rio',
+    desc: 'Orla e Av. Beira Rio<br>~1,5 km · lazer e spillover turístico'
+  }
+];
+
+const map = L.map('map-interactive', {
+  scrollWheelZoom: true,
+  zoomControl: true
+}).setView(VOLO, 16);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+pois.forEach(poi => {
+  const marker = L.circleMarker(poi.pos, {
+    radius: poi.radius,
+    fillColor: poi.color,
+    color: '#fff',
+    weight: 2,
+    opacity: 1,
+    fillOpacity: 0.95
+  }).addTo(map);
+  if (poi.zIndex) marker.setZIndexOffset(poi.zIndex);
+  marker.bindPopup(`<strong>${poi.title}</strong>${poi.desc}`);
+  if (poi.id === 'volo') marker.openPopup();
+});
+
+// Mostra Volo Spot e pontos de interesse ao redor
+const bounds = L.latLngBounds(pois.map(p => p.pos));
+map.fitBounds(bounds.pad(0.18));
+
+// Recalcula tamanho quando a seção ficar visível
+const mapObserver = new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting) {
+    map.invalidateSize();
+    map.fitBounds(bounds.pad(0.18));
+  }
+}, { threshold: 0.2 });
+mapObserver.observe(document.getElementById('map-interactive'));
 </script>
 </body>
 </html>
