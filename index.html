@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOLO SPOT — Oportunidade de Investimento | Itajaí SC</title>
+<style>
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5B0;
+    --dark: #0D0D0D;
+    --dark-2: #141414;
+    --dark-3: #1C1C1C;
+    --dark-4: #242424;
+    --text: #E8E4DC;
+    --text-muted: #8A8680;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    background: linear-gradient(to bottom, rgba(13,13,13,0.9), transparent);
+  }
+  .nav-logo {
+    font-family: Georgia, serif;
+    font-size: 20px;
+    font-weight: 300;
+    letter-spacing: 5px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .nav-badge {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    border: 1px solid rgba(201,169,110,0.3);
+    padding: 5px 14px;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 650px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    filter: brightness(0.4);
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13,13,13,0.97) 0%, rgba(13,13,13,0.3) 55%, transparent 100%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    padding: 60px 60px;
+    max-width: 860px;
+  }
+  .tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    margin-bottom: 22px;
+  }
+  .hero h1 {
+    font-family: Georgia, serif;
+    font-size: clamp(52px, 8vw, 100px);
+    font-weight: 300;
+    line-height: 1.0;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .hero h1 em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 36px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid rgba(201,169,110,0.25);
+    padding-top: 24px;
+  }
+  .hero-stat {
+    flex: 1;
+    padding-right: 24px;
+    border-right: 1px solid rgba(201,169,110,0.15);
+    margin-right: 24px;
+  }
+  .hero-stat:last-child { border-right: none; }
+  .hero-stat .num {
+    font-family: Georgia, serif;
+    font-size: 34px;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .hero-stat .lbl {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 4px;
+  }
+
+  /* SECTIONS */
+  section { padding: 90px 60px; }
+  .alt { background: var(--dark-2); }
+  .section-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 18px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .divider {
+    width: 50px; height: 1px;
+    background: var(--gold);
+    margin-bottom: 40px;
+  }
+  p.body-text {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    max-width: 760px;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: center;
+  }
+  .about-img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+  }
+  .highlight-box {
+    background: var(--dark-3);
+    border-left: 3px solid var(--gold);
+    padding: 20px 24px;
+    margin-top: 28px;
+  }
+  .highlight-box p { font-size: 13px; color: var(--text); margin: 0; line-height: 1.7; }
+
+  /* GALLERY */
+  .gallery-wrap {
+    padding: 90px 0;
+    background: var(--dark-2);
+  }
+  .gallery-header { padding: 0 60px; margin-bottom: 40px; }
+  .gallery-scroll {
+    display: flex;
+    gap: 4px;
+    overflow-x: auto;
+    padding: 0 60px;
+    scrollbar-width: none;
+    cursor: grab;
+  }
+  .gallery-scroll::-webkit-scrollbar { display: none; }
+  .gallery-item { flex: 0 0 auto; overflow: hidden; position: relative; width: 340px; }
+  .gallery-item img {
+    width: 100%; height: 320px;
+    object-fit: cover; display: block;
+    transition: transform 0.6s ease, filter 0.4s;
+    filter: brightness(0.82);
+  }
+  .gallery-item:hover img { transform: scale(1.05); filter: brightness(1); }
+  .gallery-item .caption {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.65));
+    padding: 20px 14px 10px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+  }
+
+  /* AMENITIES */
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 40px;
+  }
+  .amenity-card {
+    background: var(--dark-3);
+    padding: 28px 22px;
+    border: 1px solid rgba(201,169,110,0.07);
+    transition: border-color 0.3s;
+  }
+  .amenity-card:hover { border-color: rgba(201,169,110,0.35); }
+  .amenity-card .icon { font-size: 24px; margin-bottom: 14px; display: block; }
+  .amenity-card h4 {
+    font-size: 11px; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 7px;
+  }
+  .amenity-card p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+
+  /* LOCATION */
+  .location-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  .map-box {
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.15);
+    overflow: hidden;
+  }
+  .map-box img { width: 100%; height: auto; display: block; object-fit: cover; }
+  .map-link-btn {
+    display: block;
+    background: var(--gold);
+    color: var(--dark);
+    text-decoration: none;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 14px;
+    margin-top: 10px;
+    transition: opacity 0.2s;
+  }
+  .map-link-btn:hover { opacity: 0.85; }
+  .loc-points { display: flex; flex-direction: column; gap: 0; }
+  .loc-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.07);
+    margin-bottom: 3px;
+  }
+  .loc-icon { font-size: 20px; min-width: 28px; }
+  .loc-info h4 { font-size: 13px; font-weight: 500; margin-bottom: 3px; }
+  .loc-info p { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+  /* UNITS */
+  .units-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 40px;
+  }
+  .urgency-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,169,110,0.08);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 18px;
+  }
+  .urgency-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--gold);
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  .units-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+  .unit-card {
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.15);
+    border-left: 3px solid var(--gold);
+    padding: 32px 28px;
+  }
+  .unit-num {
+    font-family: Georgia, serif;
+    font-size: 52px;
+    font-weight: 300;
+    color: rgba(201,169,110,0.15);
+    line-height: 1;
+    margin-bottom: 10px;
+  }
+  .unit-type {
+    font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .unit-area {
+    font-family: Georgia, serif;
+    font-size: 26px; font-weight: 300;
+    margin-bottom: 20px;
+  }
+  .unit-area span { font-size: 13px; color: var(--text-muted); }
+  .price-box {
+    background: var(--dark-4);
+    padding: 18px 16px;
+    margin-bottom: 18px;
+  }
+  .price-discount-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--dark);
+    font-size: 8px; font-weight: 700;
+    letter-spacing: 2px;
+    padding: 3px 10px;
+    margin-bottom: 8px;
+  }
+  .price-original { font-size: 12px; color: #666; text-decoration: line-through; margin-bottom: 3px; }
+  .price-final {
+    font-family: Georgia, serif;
+    font-size: 30px; font-weight: 300;
+    color: var(--gold); line-height: 1;
+  }
+  .unit-features { list-style: none; }
+  .unit-features li {
+    font-size: 12px; color: var(--text-muted);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .unit-features li::before { content: '—'; color: var(--gold); font-size: 9px; }
+  .units-note {
+    font-size: 11px; color: rgba(138,134,128,0.6);
+    font-style: italic; margin-top: 20px; line-height: 1.6;
+  }
+
+  /* PAYMENT */
+  .payment-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 40px;
+  }
+  .step {
+    background: var(--dark-3);
+    padding: 32px 24px;
+  }
+  .step-num {
+    font-family: Georgia, serif;
+    font-size: 60px; font-weight: 300;
+    color: rgba(201,169,110,0.1); line-height: 1;
+    margin-bottom: 10px;
+  }
+  .step-pct {
+    font-family: Georgia, serif;
+    font-size: 26px; font-weight: 300;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .step h4 {
+    font-size: 10px; font-weight: 500;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 8px;
+  }
+  .step p { font-size: 12px; color: var(--text-muted); line-height: 1.6; }
+  .info-box {
+    background: var(--dark-4);
+    border: 1px solid rgba(201,169,110,0.12);
+    padding: 20px 24px;
+    margin-top: 32px;
+  }
+  .info-box p { font-size: 12px; color: var(--text-muted); line-height: 1.7; }
+
+  /* MARKET */
+  .market-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: start;
+    margin-top: 40px;
+  }
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-bottom: 2px;
+  }
+  .kpi-box {
+    background: var(--dark-3);
+    padding: 28px 22px;
+    border: 1px solid rgba(201,169,110,0.08);
+  }
+  .kpi-val {
+    font-family: Georgia, serif;
+    font-size: 40px; font-weight: 300;
+    color: var(--gold); line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+  .kpi-source { font-size: 9px; color: rgba(138,134,128,0.5); margin-top: 5px; }
+  .sim-table {
+    background: var(--dark-3);
+    border: 1px solid rgba(201,169,110,0.15);
+  }
+  .sim-table h4 {
+    padding: 16px 20px;
+    font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold);
+    border-bottom: 1px solid rgba(201,169,110,0.15);
+  }
+  .sim-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 12px;
+  }
+  .sim-row .lbl { color: var(--text-muted); }
+  .sim-row .val { color: var(--text); font-weight: 500; }
+  .sim-row.hl { background: rgba(201,169,110,0.07); }
+  .sim-row.hl .val {
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-size: 16px; font-weight: 300;
+  }
+  .sim-footnote {
+    font-size: 10px; color: rgba(138,134,128,0.5);
+    padding: 12px 20px; font-style: italic; line-height: 1.5;
+  }
+
+  /* FLOOR PLAN */
+  .floorplan-img {
+    width: 100%; max-width: 980px;
+    margin: 40px auto 0;
+    display: block;
+    border: 1px solid rgba(201,169,110,0.12);
+  }
+
+  /* CTA */
+  .cta {
+    text-align: center;
+    padding: 110px 60px;
+    background: var(--dark-3);
+    border-top: 1px solid rgba(201,169,110,0.12);
+  }
+  .cta .section-title { max-width: 680px; margin: 0 auto 14px; }
+  .cta p { color: var(--text-muted); font-size: 14px; max-width: 600px; margin: 0 auto 16px; }
+  .cta .disclaimer {
+    font-size: 10px; color: rgba(138,134,128,0.5);
+    font-style: italic; max-width: 640px; margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark);
+    padding: 32px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(201,169,110,0.08);
+  }
+  footer .logo { font-family: Georgia, serif; font-size: 16px; letter-spacing: 4px; color: var(--gold); }
+  footer p { font-size: 10px; color: var(--text-muted); letter-spacing: 1px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    nav { padding: 18px 24px; }
+    .nav-badge { display: none; }
+    section { padding: 64px 24px; }
+    .hero-content { padding: 40px 24px; }
+    .hero-stats { flex-direction: column; gap: 16px; }
+    .hero-stat { border-right: none; border-bottom: 1px solid rgba(201,169,110,0.15); padding-bottom: 16px; margin-right: 0; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-img { aspect-ratio: 16/9; }
+    .gallery-header { padding: 0 24px; }
+    .gallery-scroll { padding: 0 24px; }
+    .gallery-item { width: 280px !important; }
+    .gallery-item img { height: 240px; }
+    .amenities-grid { grid-template-columns: 1fr 1fr; }
+    .location-grid { grid-template-columns: 1fr; gap: 32px; }
+    .units-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .units-grid { grid-template-columns: 1fr; }
+    .payment-steps { grid-template-columns: 1fr 1fr; }
+    .market-grid { grid-template-columns: 1fr; gap: 40px; }
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; padding: 24px; }
+    .cta { padding: 70px 24px; }
+  }
+  @media (max-width: 500px) {
+    .amenities-grid { grid-template-columns: 1fr; }
+    .payment-steps { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Volo Spot</div>
+  <div class="nav-badge">Oportunidade Exclusiva — Pré-Lançamento</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-bg" src="assets/fachada-noturna.jpg" alt="Volo Spot — Fachada noturna">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="tag">Investimento · Itajaí SC · Centro</div>
+    <h1>Volo<br><em>Spot</em></h1>
+    <p class="hero-sub">Studios de Alto Padrão · Short Stay · Ao Lado do Hospital</p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">15,5%</div>
+        <div class="lbl">Retorno médio anual em Itajaí</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">5º</div>
+        <div class="lbl">M² mais valorizado do Brasil</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">3 un.</div>
+        <div class="lbl">Com 10% de desconto</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section>
+  <div class="about-grid">
+    <img class="about-img" src="assets/fachada-diurna.jpg" alt="Volo Spot — Fachada diurna">
+    <div>
+      <div class="section-label">O Projeto</div>
+      <h2 class="section-title">Um ativo inteligente no coração de <em>Itajaí</em></h2>
+      <div class="divider"></div>
+      <p class="body-text">O <strong style="color:#E8E4DC;">Volo Spot</strong> é um empreendimento de studios compactos de alto padrão localizado no Centro de Itajaí, ao lado do complexo hospitalar — uma das localizações mais estratégicas para operação de short stay da cidade.</p>
+      <p class="body-text">Projetado para atender executivos, profissionais de saúde, universitários da Univali e turistas que transbordam de Balneário Camboriú e Praia Brava, o empreendimento entrega infraestrutura e serviço de hotel boutique.</p>
+      <p class="body-text">Com o 5º metro quadrado mais valorizado do Brasil e demanda 12 meses por ano — porto, hospital, universidade e spillover de lazer — Itajaí oferece algo raro: <strong style="color:#E8E4DC;">alta ocupação fora da temporada.</strong></p>
+      <div class="highlight-box">
+        <p>📍 Rua Ver. João Angelino Lopes Júnior — Centro, Itajaí SC<br>A menos de 500m do hospital · 1,5km das praias · 12km de Balneário Camboriú</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<div class="gallery-wrap">
+  <div class="gallery-header">
+    <div class="section-label">Ambientes</div>
+    <h2 class="section-title">Infraestrutura de <em>hotel 5 estrelas</em></h2>
+  </div>
+  <div class="gallery-scroll" id="gallery">
+    <div class="gallery-item">
+      <img src="assets/fachada-noturna.jpg" alt="Fachada — Perspectiva Noturna" loading="lazy">
+      <div class="caption">Fachada — Perspectiva Noturna</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/fachada-diurna.jpg" alt="Fachada — Perspectiva Diurna" loading="lazy">
+      <div class="caption">Fachada — Perspectiva Diurna</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/studio-mobiliado.jpg" alt="Studio Mobiliado" loading="lazy">
+      <div class="caption">Studio Mobiliado</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/studio-cozinha-integrada.jpg" alt="Studio — Cozinha Integrada" loading="lazy">
+      <div class="caption">Studio — Cozinha Integrada</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/piscina-gourmet.jpg" alt="Piscina & Espaço Gourmet" loading="lazy">
+      <div class="caption">Piscina & Espaço Gourmet</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/academia-elevate-fitness.jpg" alt="Academia Elevate Fitness" loading="lazy">
+      <div class="caption">Academia Elevate Fitness</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/rooftop-lounge.jpg" alt="Rooftop Lounge" loading="lazy">
+      <div class="caption">Rooftop Lounge</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/salao-gourmet.jpg" alt="Salão Gourmet & Terraço" loading="lazy">
+      <div class="caption">Salão Gourmet & Terraço</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/salao-jogos.jpg" alt="Salão de Jogos & Convivência" loading="lazy">
+      <div class="caption">Salão de Jogos & Convivência</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/home-cinema.jpg" alt="Home Cinema" loading="lazy">
+      <div class="caption">Home Cinema</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/lobby.jpg" alt="Lobby" loading="lazy">
+      <div class="caption">Lobby</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/lavanderia.jpg" alt="Lavanderia" loading="lazy">
+      <div class="caption">Lavanderia</div>
+    </div>
+    <div class="gallery-item">
+      <img src="assets/pet-place.jpg" alt="Pet Place" loading="lazy">
+      <div class="caption">Pet Place</div>
+    </div>
+  </div>
+</div>
+
+<!-- AMENITIES -->
+<section>
+  <div class="section-label">Diferenciais</div>
+  <h2 class="section-title">O que faz o hóspede <em>escolher</em> e retornar</h2>
+  <div class="divider"></div>
+  <div class="amenities-grid">
+    <div class="amenity-card"><span class="icon">🏊</span><h4>Piscina & Pool Bar</h4><p>Piscina com raia, bar de borda e área de solarium. Experiência resort.</p></div>
+    <div class="amenity-card"><span class="icon">💪</span><h4>Elevate Fitness</h4><p>Academia equipada com linha profissional. Bicicletas, esteiras e espaço funcional.</p></div>
+    <div class="amenity-card"><span class="icon">🌿</span><h4>Rooftop Garden</h4><p>Jardim suspenso com lounge, lareira e árvore central. Vista privilegiada da cidade.</p></div>
+    <div class="amenity-card"><span class="icon">🎬</span><h4>Home Theater</h4><p>Sala de cinema com sofás premium, paredes em mármore verde e iluminação imersiva.</p></div>
+    <div class="amenity-card"><span class="icon">🍽️</span><h4>Salão Gourmet</h4><p>Espaço gourmet com cozinha integrada, ilha, sala de jantar e varanda verde.</p></div>
+    <div class="amenity-card"><span class="icon">🎱</span><h4>Game Room & Bar</h4><p>Bilhar, pebolim, bar em mármore e terraço com fogueira e vista da cidade.</p></div>
+    <div class="amenity-card"><span class="icon">🧺</span><h4>Laundry</h4><p>Lavanderia compartilhada com terraço. Praticidade para estadias curtas.</p></div>
+    <div class="amenity-card"><span class="icon">🐾</span><h4>Pet Space</h4><p>Área exclusiva para pets com brinquedos, banco e paisagismo. Pet friendly real.</p></div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section class="alt">
+  <div class="section-label">Localização</div>
+  <h2 class="section-title">Centro de Itajaí — <em>demanda 12 meses</em></h2>
+  <div class="divider"></div>
+  <div class="location-grid">
+    <div>
+      <div class="map-box">
+        <img src="assets/mapa-localizacao.jpg" alt="Mapa de localização — Centro de Itajaí, Volo Spot">
+        <p style="font-size:9px;color:#666;padding:8px 12px 0;margin:0;">© OpenStreetMap contributors</p>
+      </div>
+      <a class="map-link-btn" href="https://www.google.com/maps/place/R.+Ver.+Jo%C3%A3o+Angelino+Lopes+J%C3%BAnior+-+Centro,+Itaja%C3%AD+-+SC,+88301-230/@-26.9098086,-48.659507,1089m/data=!3m1!1e3!4m6!3m5!1s0x94d8cc74b7d02ab7:0xd1b1e53833f07bb!8m2!3d-26.9106025!4d-48.6588212!16s%2Fg%2F1ymvfcx7x?entry=ttu" target="_blank">
+        🗺&nbsp;&nbsp;Abrir no Google Maps
+      </a>
+    </div>
+    <div class="loc-points">
+      <div class="loc-point">
+        <div class="loc-icon">🏥</div>
+        <div class="loc-info"><h4>Hospital Ao Lado</h4><p>Complexo hospitalar na mesma rua — demanda constante de médicos, pacientes e acompanhantes o ano todo.</p></div>
+      </div>
+      <div class="loc-point">
+        <div class="loc-icon">🏛</div>
+        <div class="loc-info"><h4>Univali — 500m</h4><p>Universidade do Vale do Itajaí gera fluxo contínuo de estudantes e visitantes acadêmicos.</p></div>
+      </div>
+      <div class="loc-point">
+        <div class="loc-icon">⚓</div>
+        <div class="loc-info"><h4>Porto & Polo Logístico</h4><p>Um dos maiores portos do Brasil. Executivos demandam hospedagem durante a semana.</p></div>
+      </div>
+      <div class="loc-point">
+        <div class="loc-icon">🏖</div>
+        <div class="loc-info"><h4>Spillover de BC e Praia Brava</h4><p>12km de Balneário Camboriú. Turistas que fogem dos preços de BC encontram qualidade equivalente aqui.</p></div>
+      </div>
+      <div class="loc-point">
+        <div class="loc-icon">✈️</div>
+        <div class="loc-info"><h4>Aeroporto de Navegantes — 15min</h4><p>Conexão direta para hóspedes de SP e SC que chegam pelo aeroporto regional.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- UNITS -->
+<section>
+  <div class="units-header">
+    <div>
+      <div class="section-label">Oportunidade</div>
+      <h2 class="section-title">Unidades <em>disponíveis</em> com desconto</h2>
+    </div>
+    <div class="urgency-badge"><div class="urgency-dot"></div>Apenas 3 unidades — 8º andar</div>
+  </div>
+  <div class="units-grid">
+    <div class="unit-card">
+      <div class="unit-num">803</div>
+      <div class="unit-type">Studio · Frente · 8º Andar</div>
+      <div class="unit-area">44,71 <span>m²</span></div>
+      <div class="price-box">
+        <div class="price-discount-tag">— 10% DESCONTO PRÉ-LANÇAMENTO</div>
+        <div class="price-original">De R$ 679.000</div>
+        <div class="price-final">R$ 611.100</div>
+      </div>
+      <ul class="unit-features">
+        <li>Orientação Frente — sacada com churrasqueira</li>
+        <li>1 vaga de garagem inclusa</li>
+        <li>Living + cozinha integrada + banho</li>
+        <li>R$ 13.669/m² com desconto</li>
+      </ul>
+    </div>
+    <div class="unit-card">
+      <div class="unit-num">804</div>
+      <div class="unit-type">Studio · Frente · 8º Andar</div>
+      <div class="unit-area">43,92 <span>m²</span></div>
+      <div class="price-box">
+        <div class="price-discount-tag">— 10% DESCONTO PRÉ-LANÇAMENTO</div>
+        <div class="price-original">De R$ 668.000</div>
+        <div class="price-final">R$ 601.200</div>
+      </div>
+      <ul class="unit-features">
+        <li>Orientação Frente — sacada com churrasqueira</li>
+        <li>1 vaga de garagem inclusa</li>
+        <li>Living + cozinha integrada + banho</li>
+        <li>R$ 13.688/m² com desconto</li>
+      </ul>
+    </div>
+    <div class="unit-card">
+      <div class="unit-num">808</div>
+      <div class="unit-type">Studio · Lateral · 8º Andar</div>
+      <div class="unit-area">36,00 <span>m²</span></div>
+      <div class="price-box">
+        <div class="price-discount-tag">— 10% DESCONTO PRÉ-LANÇAMENTO</div>
+        <div class="price-original">De R$ 560.000</div>
+        <div class="price-final">R$ 504.000</div>
+      </div>
+      <ul class="unit-features">
+        <li>Orientação Lateral</li>
+        <li>1 vaga de garagem inclusa</li>
+        <li>Living + cozinha integrada + banho</li>
+        <li>R$ 14.000/m² com desconto</li>
+      </ul>
+    </div>
+  </div>
+  <p class="units-note">* Desconto sobre tabela de pré-lançamento (Março/2026). Valores corrigidos pelo CUB/SC até a entrega. Sinal de R$10.000 para reserva — incorporação em registro (~30 dias). Se necessário mais unidades, 7º andar pode ter condições similares — consultar disponibilidade.</p>
+</section>
+
+<!-- PAYMENT -->
+<section class="alt">
+  <div class="section-label">Forma de Pagamento</div>
+  <h2 class="section-title">Condições de <em>pré-lançamento</em></h2>
+  <div class="divider"></div>
+  <div class="payment-steps">
+    <div class="step">
+      <div class="step-num">01</div>
+      <div class="step-pct">R$ 10k</div>
+      <h4>Reserva</h4>
+      <p>Sinal imediato para garantir a unidade com desconto. Incorporação em registro em ~30 dias.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">02</div>
+      <div class="step-pct">40%</div>
+      <h4>Até a Entrega</h4>
+      <p>40% diluídos em até 72 parcelas mensais ou 48 meses + 5 reforços anuais.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">03</div>
+      <div class="step-pct">60%</div>
+      <h4>Na Entrega</h4>
+      <p>Saldo financiado via banco ou pago à vista. Entrega prevista: 60 meses após o registro.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">04</div>
+      <div class="step-pct">🔑</div>
+      <h4>Chaves & Renda</h4>
+      <p>Imóvel operacional imediatamente. Gestão via Airbnb/Booking ou operadora parceira.</p>
+    </div>
+  </div>
+  <div class="info-box">
+    <p>💡 <strong style="color:#E8E4DC;">Correção:</strong> valores corrigidos pela variação mensal positiva do CUB/SC até a entrega, e após pela SELIC mensalizada. Possibilidade de financiamento bancário. Consulte condições diretamente com a incorporadora.</p>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section>
+  <div class="section-label">Potencial de Renda</div>
+  <h2 class="section-title">Por que Itajaí é <em>top 5</em> no Brasil para short stay</h2>
+  <div class="divider"></div>
+  <div class="market-grid">
+    <div>
+      <div class="kpi-grid">
+        <div class="kpi-box">
+          <div class="kpi-val">15,5%</div>
+          <div class="kpi-label">Retorno médio anual</div>
+          <div class="kpi-source">MySide Ranking 2025 · últimos 5 anos</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val">5º</div>
+          <div class="kpi-label">M² mais caro do Brasil</div>
+          <div class="kpi-source">Índice FipeZap 2025/2026</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val">+30%</div>
+          <div class="kpi-label">Retorno total potencial a.a.</div>
+          <div class="kpi-source">Renda + valorização · Saes Emp. / Tupi FM</div>
+        </div>
+        <div class="kpi-box">
+          <div class="kpi-val">R$7,7bi</div>
+          <div class="kpi-label">Mercado nacional short stay</div>
+          <div class="kpi-source">HeyInvest · crescimento +92%</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="sim-table">
+        <h4>Simulação de Renda — Studio 44m² (cenário conservador)</h4>
+        <div class="sim-row"><span class="lbl">Diária média estimada</span><span class="val">R$ 250 – R$ 350</span></div>
+        <div class="sim-row"><span class="lbl">Ocupação conservadora (55%)</span><span class="val">~17 noites/mês</span></div>
+        <div class="sim-row"><span class="lbl">Faturamento bruto mensal</span><span class="val">R$ 4.250 – R$ 5.950</span></div>
+        <div class="sim-row"><span class="lbl">Custos operacionais (~30%)</span><span class="val">– R$ 1.275 – R$ 1.785</span></div>
+        <div class="sim-row hl"><span class="lbl">Receita líquida estimada</span><span class="val">R$ 5.000 – R$ 7.500/mês</span></div>
+        <div class="sim-row"><span class="lbl">Rendimento sobre investimento</span><span class="val">~10% – 14% a.a.</span></div>
+        <div class="sim-row"><span class="lbl">Valorização patrimonial estimada</span><span class="val">+ 8% – 15% a.a.</span></div>
+        <div class="sim-row hl"><span class="lbl">Retorno total potencial</span><span class="val">até 30% a.a.</span></div>
+        <p class="sim-footnote">Simulação com base em dados de Itajaí (MySide, Saes Emp., NSC Total, Tupi FM — 2025/2026). Alta temporada amplifica os valores. Não constitui garantia de retorno.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FLOOR PLAN -->
+<section class="alt">
+  <div class="section-label">Planta</div>
+  <h2 class="section-title">Pavimento tipo — <em>8º andar</em></h2>
+  <div class="divider"></div>
+  <img class="floorplan-img" src="assets/planta-pavimento.jpg" alt="Planta do pavimento tipo — 8º andar">
+</section>
+
+<!-- CTA -->
+<div class="cta">
+  <div class="section-label">Próximo Passo</div>
+  <h2 class="section-title">Garanta sua unidade <em>antes do registro</em></h2>
+  <p>Apenas 3 unidades disponíveis com 10% de desconto no 8º andar. Após o registro da incorporação, os valores sobem para a tabela de Abril/2026. O sinal de R$10.000 garante a reserva.</p>
+  <p class="disclaimer">Material elaborado para investidores. Não constitui oferta formal. Informações sujeitas a verificação junto à incorporadora. Tabela de referência: Março/2026 (pré-lançamento). Previsão de entrega: 60 meses após o registro da incorporação.</p>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">Volo Spot · Itajaí SC</div>
+  <p>Centro · Rua Ver. João Angelino Lopes Júnior</p>
+  <p>Material exclusivo para investidores · Maio 2026</p>
+</footer>
+
+<script>
+// Drag to scroll gallery
+const gallery = document.getElementById('gallery');
+let isDown = false, startX, scrollLeft;
+gallery.addEventListener('mousedown', e => { isDown = true; startX = e.pageX - gallery.offsetLeft; scrollLeft = gallery.scrollLeft; });
+gallery.addEventListener('mouseleave', () => isDown = false);
+gallery.addEventListener('mouseup', () => isDown = false);
+gallery.addEventListener('mousemove', e => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - gallery.offsetLeft;
+  gallery.scrollLeft = scrollLeft - (x - startX) * 1.5;
+});
+</script>
+</body>
+</html>
