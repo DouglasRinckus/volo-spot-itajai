@@ -398,6 +398,35 @@
     background: var(--dark-4);
     z-index: 1;
   }
+  .leaflet-div-icon.map-pin-icon {
+    background: transparent;
+    border: none;
+  }
+  .map-pin {
+    width: 30px; height: 30px;
+    margin: 0 auto;
+    background: var(--pin-color, #C9A96E);
+    border: 3px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .map-pin::after {
+    content: '';
+    position: absolute;
+    bottom: -8px; left: 50%;
+    transform: translateX(-50%);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 9px solid var(--pin-color, #C9A96E);
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+  }
+  .map-pin.volo {
+    width: 38px; height: 38px;
+    border-width: 4px;
+    box-shadow: 0 0 0 4px rgba(201,169,110,0.35), 0 3px 12px rgba(0,0,0,0.55);
+  }
+  .map-pin.volo::after { border-top-width: 11px; bottom: -10px; }
   .map-legend {
     display: flex; flex-wrap: wrap; gap: 10px 16px;
     padding: 12px 14px;
@@ -414,7 +443,8 @@
     flex-shrink: 0;
   }
   .map-legend-dot.gold { background: var(--gold); box-shadow: 0 0 0 2px rgba(201,169,110,0.4); }
-  .map-legend-dot.green { background: #4a7a4a; }
+  .map-legend-dot.green { background: #3d7a3d; }
+  .map-legend-dot.green-light { background: #4a8a4a; }
   .map-legend-dot.blue { background: #3a5a8a; }
   .map-legend-dot.teal { background: #2a6a7a; }
   .map-legend-dot.sand { background: #8a7a5a; }
@@ -903,9 +933,10 @@
         <div class="map-legend">
           <span class="map-legend-item"><span class="map-legend-dot gold"></span> Volo Spot</span>
           <span class="map-legend-item"><span class="map-legend-dot green"></span> Hospital</span>
+          <span class="map-legend-item"><span class="map-legend-dot green-light"></span> HEMOSC</span>
           <span class="map-legend-item"><span class="map-legend-dot blue"></span> Univali</span>
           <span class="map-legend-item"><span class="map-legend-dot teal"></span> Porto</span>
-          <span class="map-legend-item"><span class="map-legend-dot sand"></span> Praia / Beira Rio</span>
+          <span class="map-legend-item"><span class="map-legend-dot sand"></span> Praia / Orla</span>
         </div>
         <p class="map-attribution">Arraste e dê zoom para explorar · © OpenStreetMap contributors</p>
       </div>
@@ -1226,87 +1257,116 @@ lightbox.addEventListener('touchend', e => {
 }, { passive: true });
 
 // ——— Mapa interativo (Leaflet) ———
-const VOLO = [-26.9106025, -48.6588212];
+// Coordenadas via OpenStreetMap / Nominatim (mai/2026)
+const VOLO = [-26.9105955, -48.6588092];
 const pois = [
   {
     id: 'volo',
     pos: VOLO,
     color: '#C9A96E',
-    radius: 12,
-    zIndex: 1000,
+    large: true,
     title: 'VOLO SPOT',
-    desc: 'Rua Ver. João Angelino Lopes Júnior — Centro<br><em>Seu investimento está aqui</em>'
+    desc: '<br>Rua Ver. João Angelino Lopes Júnior, 200 — Centro<br><em>Localização exata do empreendimento</em>'
   },
   {
     id: 'hospital',
-    pos: [-26.91145, -48.65815],
-    color: '#4a7a4a',
-    radius: 9,
-    title: 'Complexo Hospitalar',
-    desc: 'Hospital e Maternidade São José · HEMOSC<br>Na mesma região — demanda 12 meses'
+    pos: [-26.9101649, -48.6590281],
+    color: '#3d7a3d',
+    title: 'Hospital e Maternidade',
+    desc: '<br>Hospital Marieta Konder Bornhausen<br>Av. Marcos Konder — ao lado do Volo Spot (~80 m)'
+  },
+  {
+    id: 'hemosc',
+    pos: [-26.9090428, -48.6549308],
+    color: '#4a8a4a',
+    title: 'HEMOSC',
+    desc: '<br>Rua Lauro Müller, 374 — Centro<br>Central de hemoterapia · ~350 m'
   },
   {
     id: 'univali',
-    pos: [-26.9082, -48.6608],
-    color: '#3a5a8a',
-    radius: 9,
+    pos: [-26.9164895, -48.6645872],
+    color: '#2f5588',
     title: 'Univali',
-    desc: 'Universidade do Vale do Itajaí<br>~500 m · fluxo de estudantes e visitantes'
+    desc: '<br>Rua Uruguai, 458 — Centro<br>Universidade do Vale do Itajaí · ~650 m'
   },
   {
     id: 'porto',
-    pos: [-26.8998, -48.6518],
-    color: '#2a6a7a',
-    radius: 9,
+    pos: [-26.8942835, -48.6727365],
+    color: '#1f6b7a',
     title: 'Porto de Itajaí',
-    desc: 'Um dos maiores portos do Brasil<br>Executivos e logística — demanda semanal'
+    desc: '<br>Porto organizado da cidade<br>Executivos e logística · ~2,4 km'
   },
   {
     id: 'praia',
-    pos: [-26.9178, -48.6592],
-    color: '#8a7a5a',
-    radius: 9,
-    title: 'Praia / Beira Rio',
-    desc: 'Orla e Av. Beira Rio<br>~1,5 km · lazer e spillover turístico'
+    pos: [-26.9149930, -48.6406719],
+    color: '#8a7348',
+    title: 'Praia dos Molhes / Orla',
+    desc: '<br>Orla e região da Beira Rio<br>Lazer e spillover turístico · ~1,8 km'
   }
 ];
 
-const map = L.map('map-interactive', {
-  scrollWheelZoom: true,
-  zoomControl: true
-}).setView(VOLO, 16);
+function pinIcon(color, large) {
+  const size = large ? 38 : 30;
+  return L.divIcon({
+    className: 'map-pin-icon',
+    html: `<div class="map-pin${large ? ' volo' : ''}" style="--pin-color:${color}"></div>`,
+    iconSize: [size, size + 10],
+    iconAnchor: [size / 2, size + 8],
+    popupAnchor: [0, -size]
+  });
+}
 
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-}).addTo(map);
+let mapInstance = null;
+let poiLayer = null;
 
-pois.forEach(poi => {
-  const marker = L.circleMarker(poi.pos, {
-    radius: poi.radius,
-    fillColor: poi.color,
-    color: '#fff',
-    weight: 2,
-    opacity: 1,
-    fillOpacity: 0.95
-  }).addTo(map);
-  if (poi.zIndex) marker.setZIndexOffset(poi.zIndex);
-  marker.bindPopup(`<strong>${poi.title}</strong>${poi.desc}`);
-  if (poi.id === 'volo') marker.openPopup();
-});
+function initMap() {
+  if (mapInstance) return;
 
-// Mostra Volo Spot e pontos de interesse ao redor
-const bounds = L.latLngBounds(pois.map(p => p.pos));
-map.fitBounds(bounds.pad(0.18));
+  mapInstance = L.map('map-interactive', {
+    scrollWheelZoom: true,
+    zoomControl: true
+  });
 
-// Recalcula tamanho quando a seção ficar visível
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(mapInstance);
+
+  poiLayer = L.layerGroup().addTo(mapInstance);
+  const markers = [];
+
+  pois.forEach(poi => {
+    const marker = L.marker(poi.pos, { icon: pinIcon(poi.color, poi.large) }).addTo(poiLayer);
+    marker.bindPopup(`<strong>${poi.title}</strong>${poi.desc}`);
+    markers.push(marker);
+    if (poi.id === 'volo') marker.openPopup();
+  });
+
+  const bounds = L.latLngBounds(pois.map(p => p.pos));
+  mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+
+  mapInstance.whenReady(() => {
+    mapInstance.invalidateSize();
+    mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+  });
+}
+
+const mapEl = document.getElementById('map-interactive');
 const mapObserver = new IntersectionObserver(entries => {
   if (entries[0].isIntersecting) {
-    map.invalidateSize();
-    map.fitBounds(bounds.pad(0.18));
+    initMap();
+    if (mapInstance) {
+      setTimeout(() => {
+        mapInstance.invalidateSize();
+        const bounds = L.latLngBounds(pois.map(p => p.pos));
+        mapInstance.fitBounds(bounds, { padding: [40, 40], maxZoom: 16 });
+      }, 100);
+    }
   }
-}, { threshold: 0.2 });
-mapObserver.observe(document.getElementById('map-interactive'));
+}, { threshold: 0.15 });
+mapObserver.observe(mapEl);
+// Inicializa também se a seção já estiver visível ao carregar
+if (mapEl.getBoundingClientRect().top < window.innerHeight) initMap();
 </script>
 </body>
 </html>
